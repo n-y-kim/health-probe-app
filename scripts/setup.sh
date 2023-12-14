@@ -9,7 +9,7 @@ cd scripts
 apt update
 apt -y dist-upgrade
 apt update
-pip3 install --upgrade pip
+apt-get install -y python3-pip
 
 #checkout code
 git clone https://github.com/n-y-kim/health-probe-app.git
