@@ -8,6 +8,8 @@ from azure.mgmt.network import NetworkManagementClient
 from msrestazure.azure_active_directory import MSIAuthentication
 from bearer_token import BearerAuth
 
+from vmlifecyclehandler import VMLifecycleHandler
+
 import requests, json, os, time, sys, socket
 
 # Initializing InstanceMetadata
@@ -38,7 +40,15 @@ def delete_vmss_instance():
     
     #host_name         = socket.gethostname()
     #vmid              = hostname_to_vmid(host_name)
-    compute_client.virtual_machine_scale_set_vms.delete(resourceGroupName, vmScaleSetName, convertedInt_vm_id)
+    vmss_operation = compute_client.VirtualMachineScaleSetVMsOperations()
+    
+    try:
+        vmss_operation.begin_delete(resource_group_name= resourceGroupName, vm_scale_set_name= vmScaleSetName, instance_id= convertedInt_vm_id)
+    except Exception as e:
+        logger.warning("Deletion Error with message : " + str(e))
+        sys.exit(1)
+    # Oudated code
+    #compute_client.virtual_machine_scale_set_vms.delete(resourceGroupName, vmScaleSetName, convertedInt_vm_id)
 
 def hostname_to_vmid(hostname):
     # get last 6 characters and remove leading zeroes
@@ -97,6 +107,7 @@ if (resp.status_code == 200):
                     if (health == "Unhealthy"):
                         #check copying log and stopping custom metric
                         logger.info("Check copying logs and stopping custom metric.")
+                        VMLifecycleHandler.stopCustomMetricFlow()
                         #delete vmss instance
                         logger.info("Delete " + host_name)
                         delete_vmss_instance()
