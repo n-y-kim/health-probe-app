@@ -16,6 +16,7 @@ git clone https://github.com/n-y-kim/health-probe-app.git
 
 #Start health probe job
 cd health-probe-app
+pip3 install -r requirements.txt
 chmod +x *.py
 # nohup ./health_probe_handler.py & echo $! > health-probe-pid.file &
 nohup ./healthprobe_flask.py & echo $! > health-probe-pid.file &
