@@ -40,7 +40,7 @@ def delete_vmss_instance():
     
     #host_name         = socket.gethostname()
     #vmid              = hostname_to_vmid(host_name)
-    vmss_operation = compute_client.VirtualMachineScaleSetVMsOperations()
+    vmss_operation = compute_client.virtual_machine_scale_set_vm_extensions
     
     try:
         vmss_operation.begin_delete(resource_group_name= resourceGroupName, vm_scale_set_name= vmScaleSetName, instance_id= convertedInt_vm_id)
