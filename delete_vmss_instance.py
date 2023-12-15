@@ -5,7 +5,9 @@ from InstanceMetadata import InstanceMetadata
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.compute import ComputeManagementClient
 from azure.mgmt.network import NetworkManagementClient
-from msrestazure.azure_active_directory import MSIAuthentication
+# from msrestazure.azure_active_directory import MSIAuthentication
+from azure.identity import DefaultAzureCredential
+
 from bearer_token import BearerAuth
 
 from vmlifecyclehandler import VMLifecycleHandler
@@ -23,7 +25,8 @@ timeSleep = 10
 def delete_vmss_instance():
     ##MSI based authentication
     logger.info("Entry Point of delete_vmss_instance")
-    credentials       = MSIAuthentication()
+    # credentials       = MSIAuthentication()
+    credentials = DefaultAzureCredential()
     metadata          = InstanceMetadata().populate()
     
     subscription_id   = metadata.subscriptionId

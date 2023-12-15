@@ -1,13 +1,15 @@
 from azure.mgmt.resource import ResourceManagementClient
 from azure.mgmt.compute import ComputeManagementClient
 from azure.mgmt.network import NetworkManagementClient
-from msrestazure.azure_active_directory import MSIAuthentication
+# from msrestazure.azure_active_directory import MSIAuthentication
+from azure.identity import DefaultAzureCredential
 from InstanceMetadata import InstanceMetadata
 import socket
 
 def delete_vmss_instance():
     ##MSI based authentication
-    credentials       = MSIAuthentication()
+    #credentials       = MSIAuthentication()
+    credentials = DefaultAzureCredential()
     vmInstance        = InstanceMetadata().populate()
     
     subscription_id   = vmInstance.subscriptionId
