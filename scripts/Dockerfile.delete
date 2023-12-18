@@ -1,0 +1,4 @@
+FROM python:3.10-slim
+WORKDIR /app
+COPY ./delete_vmss_instance.py /app
+CMD ["./delete_vmss_instance.py"]
