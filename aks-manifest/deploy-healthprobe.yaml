@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: healthprobe-app
+spec:
+  selector:
+    matchLabels:
+      name: healthprobe-app
+  template:
+    metadata:
+      labels:
+        name: healthprobe-app
+    spec:
+      containers:
+      - name: healthprobe-app-container
+        image: scloudacr.azurecr.io/healthprobe-app:latest
