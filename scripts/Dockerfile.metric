@@ -1,4 +1,5 @@
-FROM python:3.10-slim
+FROM --platform=linux/amd64 python:3.10
 WORKDIR /app
-COPY ./metric_collector.py /app
-CMD ["./metric_collector.py"]
+COPY *.py *.txt config.ini /app/
+RUN pip install --no-cache-dir -r requirements.txt
+CMD ["python", "metric_collector.py"]
