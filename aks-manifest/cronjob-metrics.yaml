@@ -10,6 +10,15 @@ spec:
         spec:
           containers:
           - name: metric-app
-            image: scloudacr.azurecr.io/metric-app:latest
+            image: scloudacr.azurecr.io/metric-delete:latest
             imagePullPolicy: Always
+            command: ["/bin/sh", "-c"]
+            args: ["python metric_collector.py >> /app/log/metric_collector.log 2>&1"]
+            volumeMounts:
+            - name: log-volume
+              mountPath: /app/log
+          volumes:
+          - name: log-volume
+            persistentVolumeClaim:
+              claimName: log-pvc
           restartPolicy: OnFailure

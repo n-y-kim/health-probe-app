@@ -10,6 +10,15 @@ spec:
         spec:
           containers:
           - name: delete-instance-app
-            image: scloudacr.azurecr.io/delete-app:latest
+            image: scloudacr.azurecr.io/metric-delete:latest
             imagePullPolicy: Always
+            command: ["/bin/sh", "-c"]
+            args: ["python delete_vmss_instance.py >> /app/log/delete_vmss_instance.log 2>&1"]
+            volumeMounts:
+            - name: log-volume
+              mountPath: /app/log
+          volumes:
+          - name: log-volume
+            persistentVolumeClaim:
+              claimName: log-pvc
           restartPolicy: OnFailure

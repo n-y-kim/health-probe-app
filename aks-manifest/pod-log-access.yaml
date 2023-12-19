@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: log-access-pod
+spec:
+  containers:
+  - name: log-access-container
+    image: busybox
+    command: ["/bin/sh", "-c", "sleep 3600"]
+    volumeMounts:
+    - name: log-volume
+      mountPath: /logs
+  volumes:
+  - name: log-volume
+    persistentVolumeClaim:
+      claimName: log-pvc
