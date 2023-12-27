@@ -30,7 +30,7 @@ class VMLifecycleHandler:
             # Delete all cron jobs
             kill_process = os.system(kill_health_probe)
 
-            if kill_process is not 0:
+            if kill_process != 0:
                 logger.error("Error killing health probe")
         except:
             logger.error("Error in failing health probe")
@@ -43,13 +43,15 @@ class VMLifecycleHandler:
         removeCrontab = config.get('shell-commands', 'remove_all_crontab')
 
         #removeCrontab = "crontab -r"
+        # Print the current user
+        logger.info("Current user: " + os.getlogin())
         
         logger.info("Deleting all cron jobs")
     
         # Delete all cron jobs
         areCronsRemoved = os.system(removeCrontab)
 
-        if areCronsRemoved is not 0:
+        if areCronsRemoved != 0:
             logger.error("Error deleting Cron jobs, health probe will not fail")
 
     if(vmInstance.isPendingDelete()):
