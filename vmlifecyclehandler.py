@@ -3,12 +3,33 @@
 from logconfig import logger
 from configuration import config
 # from vminstance import VMInstance
+import requests, json, os
+import datetime
+
 from InstanceMetadata import InstanceMetadata
 from bearer_token import BearerAuth
-import requests, json, os
+
+from azure.identity import DefaultAzureCredential
+from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 
 vmInstance = InstanceMetadata().populate()
 logger.info(vmInstance)
+
+def get_blob_service_client_token_credential():
+    # TODO: Replace <storage-account-name> with your actual storage account name
+    account_url = "https://scloudstorage.blob.core.windows.net"
+    credential = DefaultAzureCredential()
+
+    # Create the BlobServiceClient object
+    blob_service_client = BlobServiceClient(account_url, credential=credential)
+
+    return blob_service_client
+
+def upload_blob_file(blob_service_client: BlobServiceClient, container_name: str):
+    container_client = blob_service_client.get_container_client(container=container_name)
+    with open(file=os.path.join('/app/log', 'delete_vmss_instance.log'), mode="rb") as data:
+        time = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+        blob_client = container_client.upload_blob(name="delete_vmss_instance(" + time + ").log", data=data, overwrite=True)
 
 class VMLifecycleHandler:
     """
@@ -18,7 +39,9 @@ class VMLifecycleHandler:
         logger.info("Performing custom operation")
 
         ## This is where the custom logic will go
-
+        logger.info("Saving log files to Blob storage...")
+        blob_service_client = get_blob_service_client_token_credential()
+        upload_blob_file(blob_service_client, "log-drop")
 
     """
     This will call the health Probe URL and fail it
