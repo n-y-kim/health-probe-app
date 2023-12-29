@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: delete-app
+spec:
+  selector:
+    matchLabels:
+      name: delete-app
+  template:
+    metadata:
+      labels:
+        name: delete-app
+    spec:
+      containers:
+      - name: delete-app
+        image: scloudacr.azurecr.io/delete-app:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: log-volume
+          mountPath: /app/log
+      volumes:
+      - name: log-volume
+        hostPath:
+          path: /var/log/delete-app
+          type: DirectoryOrCreate

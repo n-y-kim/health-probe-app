@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: metric-app
+spec:
+  selector:
+    matchLabels:
+      name: metric-app
+  template:
+    metadata:
+      labels:
+        name: metric-app
+    spec:
+      containers:
+      - name: metric-app
+        image: scloudacr.azurecr.io/metric-app:latest
+        imagePullPolicy: Always
+        volumeMounts:
+        - name: log-volume
+          mountPath: /app/log
+      volumes:
+      - name: log-volume
+        hostPath:
+          path: /var/log/metric-app
+          type: DirectoryOrCreate

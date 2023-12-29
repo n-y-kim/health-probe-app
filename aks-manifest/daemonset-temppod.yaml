@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: temp-daemonset
+spec:
+  selector:
+    matchLabels:
+      name: temp-daemonset
+  template:
+    metadata:
+      labels:
+        name: temp-daemonset
+    spec:
+      containers:
+      - name: temp-daemonset
+        image: busybox
+        command: ["sh", "-c", "while true; do sleep 3600; done"]
+        volumeMounts:
+        - name: metric-log-volume
+          mountPath: /app/log/metric-app
+        - name: delete-log-volume
+          mountPath: /app/log/delete-app
+      volumes:
+      - name: metric-log-volume
+        hostPath:
+          path: /var/log/metric-app
+          type: DirectoryOrCreate
+      - name: delete-log-volume
+        hostPath:
+          path: /var/log/delete-app
+          type: DirectoryOrCreate
